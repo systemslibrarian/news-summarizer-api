@@ -1,58 +1,49 @@
-# News Summarizer API
+News Summarizer API
+This is a simple FastAPI application that fetches top headlines related to "AI news" using the News API and summarizes them using the OpenAI API.
 
-This is a simple FastAPI application that fetches top headlines related to "Rare Earth Materials" using the News API and summarizes them using the OpenAI API.
+Features
+Fetches top news headlines on a specific topic.
 
-## Features
+Summarizes the fetched news articles using a language model.
 
-*   Fetches top news headlines on a specific topic.
-*   Summarizes the fetched news articles using a language model.
-*   Provides a simple API endpoint to access the summary.
+Provides a simple API endpoint to access the summary.
 
-## Prerequisites
-
+Prerequisites
 Before running or deploying this application, you will need:
 
-*   An API key from [News API](https://newsapi.org/).
-*   An API key from [OpenAI](https://openai.com/).
-*   Python 3.7+ installed.
-*   `pip` for installing dependencies.
+An API key from News API.
 
-## Setup and Installation
+An API key from OpenAI.
 
-1.  **Clone the repository:**
+Python 3.7+ installed.
 
-    ```bash
-    git clone <your-repository-url>
-    cd <your-repository-name>
-    ```
+pip for installing dependencies.
 
-2.  **Install dependencies:**
+Setup and Installation
+Clone the repository:
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+git clone <your-repository-url>
+cd <your-repository-name>
 
-3.  **Set environment variables:**
+Install dependencies:
 
-    ```env
-    NEWS_API_KEY=your_news_api_key
-    OPENAI_API_KEY=your_openai_api_key
-    ```
-    *Replace `your_news_api_key` and `your_openai_api_key` with your actual keys. For deployment, you will set these in your hosting provider's settings.*
+pip install -r requirements.txt
 
-4.  **Run the application locally:**
+Set environment variables:
 
-    ```bash
-    uvicorn main:app --reload
-    ```
+NEWS_API_KEY=your_news_api_key
+OPENAI_API_KEY=your_openai_api_key
 
-## Deployment to Render
+Replace your_news_api_key and your_openai_api_key with your actual keys. For deployment, you will set these in your hosting provider's settings.
 
-Follow the steps outlined previously, ensuring you set your `NEWS_API_KEY` and `OPENAI_API_KEY` as environment variables in your Render service settings.
+Run the application locally:
 
-## Usage
+uvicorn main:app --reload
 
-Once deployed, you can access the summary by sending a GET request to the `/summarize` endpoint of your service:
+Deployment to Render
+Follow the steps outlined previously, ensuring you set your NEWS_API_KEY and OPENAI_API_KEY as environment variables in your Render service settings.
 
-```bash
+Usage
+Once deployed, you can access the summary by sending a GET request to the /summarize endpoint of your service:
+
 curl your_render_service_url/summarize
