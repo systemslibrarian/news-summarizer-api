@@ -15,8 +15,8 @@ def get_headlines():
     if not api_key:
         raise Exception("NEWS_API_KEY not found in environment variables. Please set it on Render.")
 
-    # Use the API key from environment variables and 'q' for keyword search
-    url = f"https://newsapi.org/v2/top-headlines?q=rare earth materials&apiKey={api_key}"
+    # Changed the query to "AI news"
+    url = f"https://newsapi.org/v2/top-headlines?q=AI news&apiKey={api_key}" # Use the API key from secrets and 'q' for keyword search
     res = requests.get(url)
     data = res.json()
 
