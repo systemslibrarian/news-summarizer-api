@@ -1,5 +1,5 @@
 News Summarizer API
-This is a simple FastAPI application that fetches top headlines related to "AI news" using the News API and summarizes them using the OpenAI API.
+This is a simple FastAPI application that fetches top headlines related to "AI news" using the GNews API and summarizes them using the OpenAI API.
 
 Features
 Fetches top news headlines on a specific topic.
@@ -11,7 +11,7 @@ Provides a simple API endpoint to access the summary.
 Prerequisites
 Before running or deploying this application, you will need:
 
-An API key from News API.
+An API key from GNews.
 
 An API key from OpenAI.
 
@@ -31,17 +31,17 @@ pip install -r requirements.txt
 
 Set environment variables:
 
-NEWS_API_KEY=your_news_api_key
+NEWS_API_KEY=your_gnews_api_key
 OPENAI_API_KEY=your_openai_api_key
 
-Replace your_news_api_key and your_openai_api_key with your actual keys. For deployment, you will set these in your hosting provider's settings.
+Replace your_gnews_api_key and your_openai_api_key with your actual keys. For deployment, you will set these in your hosting provider's settings.
 
 Run the application locally:
 
 uvicorn main:app --reload
 
 Deployment to Render
-Follow the steps outlined previously, ensuring you set your NEWS_API_KEY and OPENAI_API_KEY as environment variables in your Render service settings.
+Follow the steps outlined previously, ensuring you set your NEWS_API_KEY (now for GNews) and OPENAI_API_KEY as environment variables in your Render service settings.
 
 Usage
 Once deployed, you can access the summary by sending a GET request to the /summarize endpoint of your service:
