@@ -12,11 +12,12 @@ def get_headlines():
     if not api_key:
         raise Exception("NEWS_API_KEY (GNews API Key) not found in environment variables. Please set it on Render.")
 
-    # GNews API endpoint for top headlines, searching for "AI news"
-    # The 'lang' parameter specifies the language (en for English)
-    # The 'max' parameter specifies the maximum number of articles to return
-    # We are requesting up to 10 articles.
-    url = f"https://gnews.io/api/v4/top-headlines?q=AI news&lang=en&max=10&token={api_key}"
+    # Refined GNews API endpoint for top headlines, searching for "AI" specifically
+    # Using "artificial intelligence" or "AI" directly might yield better results.
+    # We can also try excluding common non-AI tech terms if they keep appearing.
+    # For now, let's try a more direct "artificial intelligence" query.
+    # GNews 'q' parameter supports exact phrases with quotes.
+    url = f"https://gnews.io/api/v4/top-headlines?q=\"artificial intelligence\" OR \"AI\"&lang=en&max=10&token={api_key}"
     
     res = requests.get(url)
     data = res.json()
@@ -62,11 +63,13 @@ def read_root():
 def get_summary():
     try:
         headlines = get_headlines()
-        # --- TEMPORARY CHANGE FOR DEBUGGING ---
-        # Instead of summarizing, we return the raw headlines list
-        # This will show us how many articles GNews is actually providing.
-        return {"raw_headlines_count": len(headlines), "raw_headlines": headlines}
-        # --- END TEMPORARY CHANGE ---
+        if not headlines:
+            return {"summary": "No news items found to summarize."}
+        
+        # --- REVERTED TO ORIGINAL FUNCTIONALITY ---
+        summary = summarize_news(headlines)
+        return {"summary": summary}
+        # --- END REVERTED CHANGE ---
 
     except Exception as e:
         return {"error": str(e)}
