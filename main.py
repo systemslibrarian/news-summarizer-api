@@ -6,49 +6,57 @@ import os # Import os for environment variables
 
 app = FastAPI()
 
-# Include your get_headlines and summarize_news functions here
+# Function to fetch headlines from GNews API
 def get_headlines():
-    # In a deployed environment, you would typically read from environment variables
-    # The userdata.get('NEWS_API_KEY') part is for Google Colab and should be
-    # replaced by os.getenv in production.
-    api_key = os.getenv('NEWS_API_KEY')
+    # Retrieve GNews API key from environment variables
+    api_key = os.getenv('NEWS_API_KEY') # This variable should now hold your GNews API key
     if not api_key:
-        raise Exception("NEWS_API_KEY not found in environment variables. Please set it on Render.")
+        raise Exception("NEWS_API_KEY (GNews API Key) not found in environment variables. Please set it on Render.")
 
-    # Changed the query to "AI news"
-    url = f"https://newsapi.org/v2/top-headlines?q=AI news&apiKey={api_key}" # Use the API key from secrets and 'q' for keyword search
+    # GNews API endpoint for top headlines, searching for "AI news"
+    # The 'lang' parameter specifies the language (en for English)
+    # The 'max' parameter specifies the maximum number of articles to return
+    url = f"https://gnews.io/api/v4/top-headlines?q=AI news&lang=en&max=10&token={api_key}"
+    
     res = requests.get(url)
     data = res.json()
 
-    if data["status"] == "error":
-        raise Exception(f"Error fetching headlines: {data['message']}")
+    # GNews API uses 'errors' key for error messages, not 'status' == 'error'
+    if "errors" in data:
+        raise Exception(f"Error fetching headlines from GNews: {data['errors']}")
 
-    # Ensure articles exist before trying to access them
-    if not data["articles"]:
+    # GNews API returns articles under the 'articles' key
+    if not data.get("articles"):
         return []
 
-    return [article["title"] + ": " + article["description"] for article in data["articles"]]
+    # Extract title and description from GNews articles
+    # GNews articles have 'title' and 'description' fields directly
+    headlines = []
+    for article in data["articles"]:
+        title = article.get("title", "")
+        description = article.get("description", "")
+        if title and description: # Only add if both title and description exist
+            headlines.append(f"{title}: {description}")
+    
+    return headlines
 
+# Function to summarize news using OpenAI API (remains the same)
 def summarize_news(news_items):
-    # In a deployed environment, you would typically read from environment variables
-    # The userdata.get('OPENAI_API_KEY') part is for Google Colab and should be
-    # replaced by os.getenv in production.
     openai_api_key = os.getenv('OPENAI_API_KEY')
     if not openai_api_key:
         raise Exception("OPENAI_API_KEY not found in environment variables. Please set it on Render.")
 
-    # Corrected line 38: Ensure the string literal is properly terminated
     prompt = "Summarize these tech news items:\n" + "\n".join(news_items[:5])
     
-    client = openai.OpenAI(api_key=openai_api_key) # Initialize the OpenAI client with the API key
-    response = client.chat.completions.create( # Use the new chat completions method
-        model="gpt-3.5-turbo", # Changed model to gpt-3.5-turbo
+    client = openai.OpenAI(api_key=openai_api_key)
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.3
     )
     return response.choices[0].message.content
 
-
+# FastAPI endpoints
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the news summarizer API!"}
@@ -63,3 +71,4 @@ def get_summary():
         return {"summary": summary}
     except Exception as e:
         return {"error": str(e)}
+
